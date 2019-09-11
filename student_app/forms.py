@@ -28,31 +28,46 @@ class StudentRegister(forms.Form):
         attrs={
             'type' : 'password',
             'class' : 'form-control',
-            'placeholder' : 'Password'
+            'placeholder' : 'Password',
+            'minlength' : '8'
             }))
 
     repeat_password = forms.CharField(widget=forms.TextInput(
         attrs={
             'type' : 'password',
             'class' : 'form-control',
-            'placeholder' : 'Repeat Password'
+            'placeholder' : 'Repeat Password',
+            'minlength' : '8'
             }))
 
-    roll_no = forms.CharField(widget=forms.TextInput(
+    student_id = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'type' : 'text',
+            'class' : 'form-control',
+            'placeholder' : 'Student ID',
+            'minlength' : '5'
+            }))
+    
+    year = forms.CharField(widget=forms.Select(choices=YEARS, 
+        attrs={
+            'class' : 'form-control custom-select'
+            }))
+
+    section = forms.CharField(widget=forms.TextInput(
         attrs={
             'type' : 'number',
             'class' : 'form-control',
-            'placeholder' : 'Roll no'
+            'placeholder' : 'Section'
             }))
 
     gender = forms.CharField(widget=forms.Select(choices=GENDER, 
         attrs={
-            'class' : 'form-control'
+            'class' : 'form-control custom-select'
             }))
             
     departments = forms.CharField(widget=forms.Select(choices=DEPARTMENTS, 
         attrs={
-            'class' : 'form-control'
+            'class' : 'form-control custom-select'
         }))
 
 class StudentLogin(forms.Form):
@@ -61,7 +76,7 @@ class StudentLogin(forms.Form):
         attrs={
             'type' : 'text',
             'class' : 'form-control',
-            'placeholder' : 'Email / Roll No'
+            'placeholder' : 'Student ID'
             }))
 
     user_password = forms.CharField(widget=forms.TextInput(
