@@ -3,6 +3,7 @@ from .forms import *
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import *
+from .methods import *
 
 # Create your views here.
 def index(request):
@@ -79,6 +80,7 @@ def staff(request):
                     if check_password(request.POST['staff_password'], staff.password):
                         request.session['user_type'] = 'staff'
                         request.session['staff_id']  = staff.staff_id
+                        request.session['designation'] = staff.designation
                         return redirect('dashboard')
                     else:
                         messages.error(request, 'Login ID or password incorrect')
@@ -126,26 +128,57 @@ def staff(request):
 
 
 def dashboard(request):
+
+    if 'user_type' not in request.session.keys():
+        return redirect('/')
     
     if request.session['user_type'] == 'student':
-        student = Student.objects.filter(student_id=request.session['student_id']).get()
-        context = {
-            'name' : "{} {}".format(student.first_name, student.last_name)
-        }
+        context = student_context(request.session['student_id'])
         return render(request, 'student_app/dashboard.html', context)
 
     elif request.session['user_type'] == 'staff':
-        staff = Staff.objects.filter(staff_id=request.session['staff_id']).get()
-        context = {
-            'name' : "{} {}".format(staff.first_name, staff.last_name)
-        }
+        context = staff_context(request.session['staff_id'])
+        request.session['cc'] = context['cc']
         return render(request, 'staff/dashboard.html', context)
+
+
+def students(request):
+
+    if 'user_type' not in request.session.keys():
+        return redirect('/')
+    if request.session['cc'] == True:
+        staff = Staff.objects.filter(staff_id=request.session['staff_id']).get()
+        _class = Class.objects.filter(coordinator=staff)[0]
+        students = _class.student_set.all()
+        context = {
+            'staff' : staff,
+            'class' : _class,
+            'cc' : True,
+            'students' : students
+        }
+        return render(request, 'staff/students.html', context)
     else:
         return redirect('/')
 
 
+def profile(request):
+
+    if 'user_type' not in request.session.keys():
+        return redirect('/')
+    if request.session['user_type'] == 'student':
+        context = student_context(request.session['student_id'])
+        return render(request, 'student_app/profile.html', context)
+
+    elif request.session['user_type'] == 'staff':
+        context = staff_context(request.session['staff_id'])
+        request.session['cc'] = context['cc']
+        return render(request, 'staff/profile.html', context)
+    
+
+
 def logout(request):
 
-    del request.session['student_id']
+    for key in list(request.session.keys()):
+        del request.session[key]
 
     return redirect('/')

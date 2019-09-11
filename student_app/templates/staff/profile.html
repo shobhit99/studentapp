@@ -1,0 +1,50 @@
+<html>
+<head>
+	{% load static %}
+    <title>PICT | Staff Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% include 'student_app/head.html' %}
+<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+<script src="{% static 'student_app/js/docs.js' %}"></script>
+</head>
+<body>
+		{% include 'staff/navbar.html' %}
+		<div class="container-fluid">
+                <div class="row h-100 justify-content-center align-items-center">
+                <div class="col-md-5 col-sm-6">
+                    <div class="card">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label> Student ID  </label>
+                                    <span class="form-control">{{ staff.staff_id }} </span>
+                                </div>
+                                <div class="form-group">
+                                        <label> Name </label>
+                                        <span class="form-control"> {{ staff.first_name }} {{ staff.last_name }}</span>
+                                    </div>
+                                <div class="form-group">
+                                    <label> Email </label>
+                                    <span class="form-control"> {{ staff.email }}</span>
+                                </div>
+                                <div class="form-group">
+                                        <label> Designation </label>
+                                        <span class="form-control"> {{ staff.designation }}</span>
+                                    </div>
+                                {% if cc %}
+                                <div class="form-group">
+                                    <label> Class Coordinating </label>
+                                    <span class="form-control"> {{ class }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="form-group">          
+                                    <label> Join date </label>
+                                    <span class="form-control"> {{ staff.register_time }}</span>
+                                </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+</body>
+</html>

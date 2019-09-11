@@ -1,0 +1,38 @@
+<html>
+<head>
+	{% load static %}
+    <title>PICT | Student Management System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% include 'student_app/head.html' %}
+<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+<script src="{% static 'student_app/js/docs.js' %}"></script>
+</head>
+<body>
+		{% include 'staff/navbar.html' %}
+		<div class="container-fluid">
+			<h1>
+                    <table class="table table-hover table-striped">
+                            <thead class="">
+                              <tr>
+                                <th scope="col"># Student ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
+                              </tr>
+                            </thead>
+                            <tbody class="">
+                                {% for student in students %}
+                              <tr>
+                                <th scope="row">{{ student.student_id }}</th>
+                                <td>{{ student.first_name }}</td>
+                                <td>{{ student.last_name }}</td>
+                                <td>{{ student.email }}</td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+			</h1>
+		</div>
+</body>
+</html>
