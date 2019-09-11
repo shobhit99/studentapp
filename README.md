@@ -2,7 +2,7 @@
 
 ### Database schema
 
-<img src="https://image.prntscr.com/image/KeYmXrFBRhiNzylthip-vg.png" alt="database" width="80%" height="80%">
+<img src="https://image.prntscr.com/image/nQ5X_WGIR6qjPBJ10Cz30A.png" alt="database" width="80%" height="80%">
 
 ### Naming Conventions ( PEP8 )
 ```
