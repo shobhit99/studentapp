@@ -7,18 +7,31 @@
 <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
 <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
 <script src="{% static 'student_app/js/docs.js' %}"></script>
+<style>
+.table-responsilve{
+  max-height:300px;
+}
+</style>
 </head>
 <body>
 		{% include 'staff/navbar.html' %}
 		<div class="container-fluid">
-			<h1>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+          {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+        <form id="student-attendance" method="POST" action="{% url 'attendance' class_name=class.name %}">
+          {% csrf_token %}
                     <table class="table table-hover table-striped">
                             <thead class="">
                               <tr>
                                 <th scope="col"># Student ID</th>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
-                                <th scope="col">Email</th>
+                                <th scope="col">Remark</th>
                               </tr>
                             </thead>
                             <tbody class="">
@@ -27,12 +40,18 @@
                                 <th scope="row">{{ student.student_id }}</th>
                                 <td>{{ student.first_name }}</td>
                                 <td>{{ student.last_name }}</td>
-                                <td>{{ student.email }}</td>
+                                <td><input class="form-check-input" type="checkbox" value="{{ student.student_id }}" name="student_list[]"></td>
                               </tr>
                               {% endfor %}
                             </tbody>
-                          </table>
-			</h1>
+                    </table>
+                    <div class="row">
+                    <div class="col-md-2 col-sm-4">
+                        <input type="text" name="subject" class="form-control" placeholder="Subject">
+                    </div>
+                    <button class="btn btn-outline-primary">Submit</button>
+                    </div>
+         </form>        
 		</div>
 </body>
 </html>

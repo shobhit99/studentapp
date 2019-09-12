@@ -12,12 +12,12 @@ def student_context(id):
 def staff_context(id):
     cc = False
     staff = Staff.objects.filter(staff_id=id).get()
-    if Class.objects.filter(coordinator=staff).exists():
-        _class = Class.objects.filter(coordinator=staff)[0]
+    classes = staff.classes.all()
+    if len(classes):
         cc = True
     context = {
         'staff' : staff,
-        'cc' : cc,
-        'class' :  _class.name if cc == True else 'None'
+        'cc' : cc, 
+        'classes' : classes
     }
     return context

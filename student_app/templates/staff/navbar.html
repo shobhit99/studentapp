@@ -13,19 +13,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link">Attendance</a>
-                </li>
                 {% if cc %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'students' %}">Students</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Attendance
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for i in classes %}
+                              <a class="dropdown-item" href="{% url 'attendance' class_name=i.name %}">{{ i.name }}</a>
+                             {% endfor %}
+                      </div>
+                    
+                        {{ i.name }}
+                   
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link">Add Notice</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Events</a>
+                    <a class="nav-link">Notice</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>

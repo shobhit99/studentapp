@@ -12,6 +12,15 @@ class Department(models.Model):
         return self.name
 
 
+class Class(models.Model):
+
+    name          = models.CharField(max_length=25)
+    department    = models.ForeignKey(Department, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 class Staff(models.Model):
     
     first_name      = models.CharField(max_length=25)
@@ -21,21 +30,12 @@ class Staff(models.Model):
     staff_id        = models.CharField(max_length=15)
     gender          = models.CharField(max_length=8)
     department      = models.ForeignKey(Department, on_delete = models.CASCADE)
-    designation     = models.CharField(max_length=4)
+    designation     = models.CharField(max_length=20)
     register_time   = models.DateTimeField(default=timezone.now)
+    classes         = models.ManyToManyField(Class)
 
     def __str__(self):
         return '{}'.format(self.first_name + self.last_name)
-
-
-class Class(models.Model):
-
-    name          = models.CharField(max_length=25)
-    department    = models.ForeignKey(Department, on_delete = models.CASCADE)
-    coordinator   = models.ForeignKey(Staff, on_delete = models.DO_NOTHING, default="Ranjeet Bidwe")
-
-    def __str__(self):
-        return self.name
 
 
 class Student(models.Model):
@@ -52,3 +52,15 @@ class Student(models.Model):
 
     def __str__(self):
         return '{}'.format(self.first_name + self.last_name)
+
+class Attendance(models.Model):
+
+    marked_by       = models.ForeignKey(Staff, on_delete = models.DO_NOTHING)
+    unique_id       = models.CharField(max_length=100)
+    student         = models.ForeignKey(Student, on_delete = models.DO_NOTHING)
+    status          = models.BooleanField()
+    subject         = models.CharField(max_length=20)
+    taken_time      = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return '{} {} {}'.format(self.student, self.status, self.taken_time)
