@@ -1,0 +1,45 @@
+<html>
+<head>
+	{% load static %}
+    <title>PICT | Student Management System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% include 'student_app/head.html' %}
+<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+<script src="{% static 'student_app/js/docs.js' %}"></script>
+<style>
+</style>
+</head>
+<body>
+		{% include 'staff/navbar.html' %}
+		<div class="container-fluid">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+          {{ message }}
+      </div>
+      {% endfor %}
+	  {% endif %}
+	  	<div class="row justify-content-center align-items-center">
+                <div class="col-md-8 col-sm-10">
+		<table class="table table-hover table-striped">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th scope="col" class="text-center">ISBN</th>
+                            <th scope="col" class="text-center">Title</th>
+                          </tr>
+                        </thead>
+                        <tbody class="">
+                            {% for book in books %}
+                          <tr>
+                            <td class="text-center">{{ book.isbn }}</td>
+                            <td class="text-center">{{ book.name }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                </table>
+                </div>
+		</div> 
+		</div>
+</body>
+</html>

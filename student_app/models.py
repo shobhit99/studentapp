@@ -74,6 +74,7 @@ class Attendance(models.Model):
     def __str__(self):
         return '{} {} {}'.format(self.student, self.status, self.taken_time)
 
+
 class Notice(models.Model):
 
     title       = models.CharField(max_length=100)
@@ -83,3 +84,34 @@ class Notice(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Exam(models.Model):
+    
+    name         = models.CharField(max_length=5)
+    subject      = models.ForeignKey(Subject, on_delete = models.DO_NOTHING)
+    marks        = models.IntegerField()
+    student      = models.ForeignKey(Student, on_delete = models.DO_NOTHING)
+    publish_date = models.DateTimeField(default=timezone.now)
+
+
+    def __str__(self):
+        return "{} {} {} {}".format(self.name, self.subject, self.marks, self.student)
+
+
+class Book(models.Model):
+
+    name         = models.CharField(max_length=100)
+    isbn         = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class BorrowRecord(models.Model):
+
+    student     = models.ForeignKey(Student, on_delete = models.CASCADE )
+    book        = models.ForeignKey(Book, on_delete = models.DO_NOTHING )
+    borrow_time = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return "{} {} {}".format(student, book, borrow_time)

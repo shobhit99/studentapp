@@ -1,0 +1,75 @@
+<html>
+<head>
+	{% load static %}
+    <title>PICT | Student Management System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% include 'student_app/head.html' %}
+<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+<script src="{% static 'student_app/js/docs.js' %}"></script>
+<style>
+</style>
+</head>
+<body>
+		{% include 'staff/navbar.html' %}
+		<div class="container-fluid">
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success" role="alert">
+          {{ message }}
+      </div>
+      {% endif %}
+      {% endfor %}
+	  {% endif %}
+	  	<div class="row h-100 justify-content-center align-items-center">
+		<div class="col-md-4 col-sm-6">
+            <form method="POST" action="{% url 'books' action='add_record' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="book_name" class="form-control" placeholder="Book Name" maxlength="50">
+                </div>
+                {% if search %}
+                <table class="table table-hover table-striped">
+                        <thead class="">
+                          <tr>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Title</th>
+                          </tr>
+                        </thead>
+                        <tbody class="">
+                            {% for book in books %}
+                          <tr>
+                            <td>{{ book.isbn }}</td>
+                            <td>{{ book.name }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                </table>
+                {% endif %}
+                <div class="form-group">
+                        <button class="btn btn-outline-primary" name="search">Search</button>
+                </div>
+            </form>    
+        <form method="POST" action="{% url 'books' action='add_record' %}">
+          {% csrf_token %}
+		  	<div class="form-group">
+				<input type="text" name="student_id" class="form-control" placeholder="Student ID" maxlength="50">
+			</div>
+			<div class="form-group">
+					<input type="text" name="isbn" class="form-control" placeholder="ISBN" maxlength="50">
+			</div>
+			<div class="form-group">
+					<button class="btn btn-outline-primary" name="lend">Lend Book</button>
+			</div>
+		 </form>    
+		</div>   
+		</div> 
+		</div>
+</body>
+</html>

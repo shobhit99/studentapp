@@ -10,5 +10,8 @@ urlpatterns = [
     path('attendance/', views.student_attendance, name='student_attendance'),
     path('notice/', views.notice, name='student_notice'),
     path('notice/<action>', views.notice, name='notice'),
+    path('results/', views.results, name='results'),
+    path('exam/<class_name>', views.exam, name='exam'),
+    path('books/<action>', views.books, name='books'),
     path('logout/', views.logout, name='logout')
 ]

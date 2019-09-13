@@ -17,6 +17,9 @@
                     <a class="nav-link" href="{% url 'student_attendance' %}">Attendance</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'results' %}">Results</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'student_notice' %}">Notice {% if notice_count %} <span class="badge badge-light">{{ notice_count }}</span> {% endif %}</a>
                 </li>
                 <li class="nav-item">

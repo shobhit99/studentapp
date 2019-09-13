@@ -154,6 +154,67 @@ def dashboard(request):
         request.session['cc'] = context['cc']                           # if staff then "Attendance" menu will be visible
         return render(request, 'staff/dashboard.html', context)
 
+def books(request, action='view'):
+
+    if 'user_type' not in request.session.keys():                       
+        return redirect('/')
+    
+    
+    if request.session['user_type'] == 'student':
+        context = student_context(request.session['student_id'])
+        return render(request, 'student_app/dashboard.html', context)
+
+    elif request.session['user_type'] == 'staff':
+        context = staff_context(request.session['staff_id'])
+
+        if action == 'add_record':
+            if "search" in request.POST:                # Return matching books
+                book_name = request.POST['book_name']
+                results   = Book.objects.filter(name__contains=book_name) if Book.objects.filter(name__contains=book_name).count() else False
+                if not results:
+                    messages.success(request, "No Records found")
+                else:
+                    context['search'] = True
+                    context['books']  = results
+                    return render(request, 'staff/add-record.html', context)
+                return redirect('books', action='add_record')
+
+            elif "lend" in request.POST:               # Add borrow record
+                student_id = request.POST['student_id']
+                isbn       = request.POST['isbn']
+
+                if Student.objects.filter(student_id=student_id).exists() and Book.objects.filter(isbn=isbn).exists():
+                    student = Student.objects.filter(student_id=student_id).get()
+                    book    = Book.objects.filter(isbn=isbn).get()
+                else:
+                    messages.error(request, "Invalid ISBN or Student ID")
+                    return redirect('books', action='add_record')
+
+
+                new_borrow_record = BorrowRecord(student=student, book=book)
+                new_borrow_record.save()
+                messages.success(request, "Success !")
+                return redirect('books', action='add_record')
+
+
+            return render(request, 'staff/add-record.html', context)
+
+        elif action == "add":
+            if request.method == "POST":
+                book_name = request.POST['book_name']
+                isbn      = request.POST['isbn']
+                new_book  = Book(name=book_name, isbn=isbn)
+                new_book.save()
+                messages.success(request, "Book added to Database!")
+                return redirect('books', action='add')
+            return render(request, 'staff/add-book.html', context)
+
+        elif action == "view":
+            books   = Book.objects.all()
+            context['books'] = books
+            return render(request, 'staff/view-books.html', context)
+
+        
 
 def profile(request):
 
@@ -284,13 +345,75 @@ def student_attendance(request):
             attendance[subject.name] = [
                 total, 
                 attended,
-                percent
+                "{:.2f}".format(percent)
             ]
         avg_attendance = percent_count / len(subjects)                  # Calculate Average attendance
         context['attendance'] = attendance
-        context['avg_attendance'] = avg_attendance
+        context['avg_attendance'] = "{:.2f}".format(avg_attendance)
     return render(request, 'student_app/attendance.html', context)
     
+
+def results(request):
+
+    if request.session['user_type'] == 'student':
+        context   = student_context(request.session['student_id'])
+        if context['student'].exam_set.filter(name='unit1').count():
+            unit1 = context['student'].exam_set.filter(name='unit1').get()
+        else:
+            unit1 = False
+        if context['student'].exam_set.filter(name='unit2').count():
+            unit2 = context['student'].exam_set.filter(name='unit1').get()
+        else:
+            unit2 = False
+        context['unit1'] = unit1
+        context['unit2'] = unit2
+        return render(request, 'student_app/results.html', context)
+    else:
+        return redirect('/')
+
+def exam(request, class_name):
+
+    if 'user_type' not in request.session.keys():
+        return redirect('/')
+        
+    if request.session['cc'] == True:
+        if request.method == "POST":
+            student_ids = request.POST.getlist('student_list[]')
+            mark_list   = request.POST.getlist('mark_list[]')
+            subject     = Subject.objects.filter(name=request.POST['subject']).get()
+            exam        = request.POST['exam']
+            unique_id   = str(uuid.uuid4())
+            staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
+            _class      = Class.objects.filter(name=class_name).get()
+            students    = _class.student_set.all()
+            for student in students:
+                obtained_marks = 0 if mark_list[student_ids.index(student.student_id)] == '' else mark_list[student_ids.index(student.student_id)]  
+                if Exam.objects.filter(name=exam, subject=subject, student=student).exists():               # If test results already exists then update existing one
+                    old_record = Exam.objects.filter(name=exam, subject=subject, student=student).get()
+                    old_record.marks = obtained_marks
+                    old_record.save()
+                else:
+                    new_record = Exam(name=exam, subject=subject, marks=obtained_marks, student=student)    # else create new record
+                    new_record.save()
+            messages.success(request, 'Results Published Successfully!')
+            return redirect('exam', class_name=class_name)
+
+        _class      = Class.objects.filter(name=class_name).get()  # _class object will be used to display student list from that class
+        students    = _class.student_set.all()                     # _class gets list of all students from that class
+        staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
+        subjects    = _class.subjects.all()
+        classes     = staff.classes.all()                          # classes if a list of classes to display in Attendance section if cc
+        context     = {
+            'staff'     : staff,
+            'classes'   : classes,
+            'students'  : students,
+            'class'     : _class,
+            'subjects'  : subjects,
+            'cc'        : True
+        }
+        return render(request, 'staff/exam.html', context)
+    else:
+        return redirect('/')
 
 
 def logout(request):

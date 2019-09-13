@@ -18,8 +18,9 @@ def staff_context(id):
     if len(classes):
         cc = True
     context = {
-        'staff' : staff,
-        'cc' : cc, 
-        'classes' : classes
+        'staff'     : staff,
+        'cc'        : cc, 
+        'classes'   : classes,
+        'librarian' : True if staff.designation == "librarian" else False
     }
     return context
