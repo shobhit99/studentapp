@@ -2,9 +2,11 @@ from .models import *
 
 
 def student_context(id):
-    student = Student.objects.filter(student_id=id).get()
+    student     = Student.objects.filter(student_id=id).get()
+    notice_count = student._class.notice_set.all().count()
     context = {
-        'student' : student
+        'student'      : student,
+        'notice_count' : notice_count
     }
     return context
 

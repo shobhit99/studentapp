@@ -10,10 +10,36 @@
 <body>
 		{% include 'student_app/navbar.html' %}
 		<div class="container-fluid">
-			<h1>
-				{{ attendance }}
-			</h1>
-
+			<div class="row justify-content-center align-items-center">
+			<div class="col-md-6 col-sm-8">
+				<table class="table">
+						<thead class="thead-dark">
+						  <tr>
+							<th scope="col">Subject</th>
+							<th scope="col">Total Lectures</th>
+							<th scope="col">Attended</th>
+							<th scope="col">Percent</th>
+						  </tr>
+						</thead>
+						<tbody>
+							{% for key, values in attendance.items %}
+						  <tr>
+							<td>{{ key }}</td>
+							{% for v in values %}
+								<td>{{ v }}</td>
+							{% endfor %}
+						  </tr>
+						  {% endfor %}
+						  <tr>
+							  <td></td>
+							  <td></td>
+							  <td></td>
+							  <td><b>Average {{ avg_attendance }}%</b></td>
+						  </tr>
+						</tbody>
+					  </table>
+		</div>
+		</div>
 		</div>
 </body>
 </html>

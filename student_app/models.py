@@ -12,10 +12,18 @@ class Department(models.Model):
         return self.name
 
 
+class Subject(models.Model):
+    
+    name    = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
 class Class(models.Model):
 
     name          = models.CharField(max_length=25)
     department    = models.ForeignKey(Department, on_delete = models.CASCADE)
+    subjects      = models.ManyToManyField(Subject)
 
     def __str__(self):
         return self.name
@@ -53,14 +61,25 @@ class Student(models.Model):
     def __str__(self):
         return '{}'.format(self.first_name + self.last_name)
 
+
 class Attendance(models.Model):
 
     marked_by       = models.ForeignKey(Staff, on_delete = models.DO_NOTHING)
     unique_id       = models.CharField(max_length=100)
     student         = models.ForeignKey(Student, on_delete = models.DO_NOTHING)
     status          = models.BooleanField()
-    subject         = models.CharField(max_length=20)
+    subject         = models.ForeignKey(Subject, on_delete = models.DO_NOTHING)
     taken_time      = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return '{} {} {}'.format(self.student, self.status, self.taken_time)
+
+class Notice(models.Model):
+
+    title       = models.CharField(max_length=100)
+    notice      = models.TextField()
+    added_by    = models.ForeignKey(Staff, on_delete = models.CASCADE)
+    class_obj   = models.ManyToManyField(Class)
+
+    def __str__(self):
+        return self.title

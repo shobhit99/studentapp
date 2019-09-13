@@ -11,23 +11,30 @@
 </style>
 </head>
 <body>
-		{% include 'student_app/navbar.html' %}
+		{% include 'staff/navbar.html' %}
 		<div class="container-fluid">
-            {% if notices == True %}
-            <h1>No Notice yet!</h1>
-            {% else %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
             <div class="row">
                     {% for notice in notices %}
                     <div class="col-md-4 col-sm-6">  
                 <form name="note-delete" method="POST" action="{% url 'notice' action='view' %}">
                     {% csrf_token %}     
                 <div class="card border-dark mb-3">
-                        <div class="card-header">
-                                {{ notice.added_by }}
+                        <div class="card-header">{% for c in notice.class_obj.all %}
+                                <span class="badge badge-dark">{{ c }}</span>
+                               {% endfor %}
                         </div>
                         <div class="card-body text-dark">
                           <h5 class="card-title">{{ notice.title }}</h5>
                           <p class="card-text">{{ notice.notice }}</p>
+                          <input type="hidden" name="id" value="{{ notice.id }}">
+                          <button class="btn btn-sm btn-outline-dark">Delete</button>
                         </div>
                         
                       </div>
@@ -35,7 +42,6 @@
                 </form>
             </div>
                  {% endfor %}
-                 {% endif %}
             </div>
 		</div>
 </body>

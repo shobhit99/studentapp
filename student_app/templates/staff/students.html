@@ -8,9 +8,6 @@
 <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
 <script src="{% static 'student_app/js/docs.js' %}"></script>
 <style>
-.table-responsilve{
-  max-height:300px;
-}
 </style>
 </head>
 <body>
@@ -47,7 +44,11 @@
                     </table>
                     <div class="row">
                     <div class="col-md-2 col-sm-4">
-                        <input type="text" name="subject" class="form-control" placeholder="Subject">
+                      <select name="subject" class="form-control custom-select">
+                        {% for subject in subjects %}
+                        <option value="{{ subject }}">{{ subject }}</option>
+                        {% endfor %}
+                      </select>
                     </div>
                     <button class="btn btn-outline-primary">Submit</button>
                     </div>
