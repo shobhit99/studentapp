@@ -12,29 +12,32 @@ def index(request):
     if 'user_type' in request.session.keys():                       # redirect to profile if logged in
             return redirect('profile')
 
-    if request.method == 'POST':
-        if 'login-form' in request.POST:
+    register_form  = StudentRegister()
+    login_form     = StudentLogin()
+    context = {'register_form' : register_form, 'login_form' : login_form }
 
-            login_form = StudentLogin(request.POST)
+    if request.method == 'POST':
+        if 'login-form' in request.POST:                            # If login request
+
+            login_form = StudentLogin(request.POST)                 # Get object of login form
             
             if login_form.is_valid():
                 
-                # If given user id exists then check for password
-                if Student.objects.filter(student_id=request.POST['user_login']).exists():
+                if Student.objects.filter(student_id=request.POST['user_login']).exists():        # If given user id exists then check for password
                     student = Student.objects.filter(student_id=request.POST['user_login'])[0]
                     if check_password(request.POST['user_password'], student.password):
 
-                        for key in list(request.session.keys()):        # Delete previous session if any
+                        for key in list(request.session.keys()):                                   # Delete previous sessions if any
                             del request.session[key]
 
-                        request.session['user_type'] = 'student'        # user_type in sessions variable will decide contents
+                        request.session['user_type'] = 'student'                                   # user_type in session variable will decide contents
                         request.session['student_id'] = student.student_id
-                        return redirect('profile')
+                        return redirect('profile')                                                 # redirect to profile page after login
                     else:
                         messages.error(request, 'Login ID or password incorrect')
                         return redirect('/')
                 
-        elif 'register-form' in request.POST:
+        elif 'register-form' in request.POST:                       # If register request
             
             register_form = StudentRegister(request.POST)
             
@@ -50,13 +53,12 @@ def index(request):
                     errors = True
 
                 if errors:
-                    # If passwords donot match of email / user id already registered then display error messages
-                    return redirect('/')
+                    context['register_msg'] = True
+                    return render(request, 'student_app/index.html', context)                        # If passwords don't match or email / student id already registered display error
 
                 hashed_password = make_password(request.POST['password'], salt=None, hasher='default')
-                # Department and Class are foreign key in Student table
-                department  = Department.objects.filter(name=request.POST['departments']).get()
-                _class      = Class.objects.filter(name=request.POST['year']+request.POST['section']).get() 
+                department  = Department.objects.filter(name=request.POST['departments']).get()                 # department is foregin key in Student table
+                _class      = Class.objects.filter(name=request.POST['year']+request.POST['section']).get()     # class is a foreign key in class table
                 new_student = Student(
                     first_name  = request.POST['first_name'],
                     last_name   = request.POST['last_name'],
@@ -69,11 +71,9 @@ def index(request):
                 )
                 new_student.save()
                 messages.success(request, 'Registered Successfully')
-                return redirect('/')
-      
-    register_form  = StudentRegister()
-    login_form     = StudentLogin()
-    context = {'register_form' : register_form, 'login_form' : login_form }
+                context['register_msg'] = True                                  # Switch to register form if messages are related to register form
+                return render(request, 'student_app/index.html', context)  
+
     return render(request, 'student_app/index.html', context)
 
 
@@ -81,6 +81,10 @@ def staff(request):
 
     if 'user_type' in request.session.keys():                       # redirect to profile if logged in
             return redirect('profile')
+
+    register_form  = StaffRegister()
+    login_form     = StaffLogin() 
+    context = {'register_form' : register_form, 'login_form' : login_form }
 
     if request.method == 'POST':
         if 'login-form' in request.POST:
@@ -92,18 +96,18 @@ def staff(request):
                     staff = Staff.objects.filter(staff_id=request.POST['staff_login'])[0]
                     if check_password(request.POST['staff_password'], staff.password):
 
-                        for key in list(request.session.keys()):        # Delete previous session if any
+                        for key in list(request.session.keys()):                            # Delete previous session if any
                             del request.session[key]
                         
-                        request.session['user_type'] = 'staff'          # user type will decide contents
-                        request.session['staff_id']  = staff.staff_id
+                        request.session['user_type'] = 'staff'                              # user type will decide contents
+                        request.session['staff_id']  = staff.staff_id                       # save staff_id in sessions to get staff object later
                         return redirect('profile')
                     else:
-                        messages.error(request, 'Login ID or password incorrect')
+                        messages.error(request, 'Login ID or password incorrect')           # if wrong user / pass combination display error
                         return redirect('staff')
                 
 
-        elif 'register-form' in request.POST:
+        elif 'register-form' in request.POST:                                               # If request for registration
             
             register_form = StaffRegister(request.POST)
             
@@ -119,12 +123,11 @@ def staff(request):
                     errors = True
 
                 if errors:
-                    # display errors if passwords donot match or email / user id already registered
-                    return redirect('staff')
+                    context['register_msg'] = True                                # Switch to register form if messages are related to register form
+                    return render(request, 'staff/index.html', context)           # If passwords don't match or id / email already registered then display errors                           
 
                 hashed_password = make_password(request.POST['password'], salt=None, hasher='default')
-                # Department is foreign key in Staff table
-                department  = Department.objects.filter(name=request.POST['departments']).get()
+                department  = Department.objects.filter(name=request.POST['departments']).get()     # department is foreign key in Staff table
                 new_staff = Staff(
                     first_name  = request.POST['first_name'],
                     last_name   = request.POST['last_name'],
@@ -137,12 +140,25 @@ def staff(request):
                 )
                 new_staff.save()
                 messages.success(request, 'Registered Successfully')
-                return redirect('staff')
+                context['register_msg'] = True                                      # Switch to register form if messages are related to register form
+                return render(request, 'staff/index.html', context)
 
-    register_form  = StaffRegister()
-    login_form     = StaffLogin() 
-    context = {'register_form' : register_form, 'login_form' : login_form }
     return render(request, 'staff/index.html', context)
+
+
+def profile(request):
+    
+    if 'user_type' not in request.session.keys():                   # if not logged in then redirect to home page
+        return redirect('/')
+
+    if request.session['user_type'] == 'student':                   # if user is student then display student's profile
+        context = student_context(request.session['student_id'])
+        return render(request, 'student_app/profile.html', context)
+
+    elif request.session['user_type'] == 'staff':                   # if user is staff then display staff's profile
+        context = staff_context(request.session['staff_id'])
+        request.session['cc'] = context['cc']                       # if teaching staff then "Attendance" menu will be visible if librarian then books
+        return render(request, 'staff/profile.html', context)
 
 
 def books(request, action='view'):
@@ -150,37 +166,37 @@ def books(request, action='view'):
     if 'user_type' not in request.session.keys():                       # if not logged in then redirect to home page   
         return redirect('/')
     
-    if request.session['user_type'] == 'student':                       
+    if request.session['user_type'] == 'student':                       # if user is student then display borrowed books
         context         = student_context(request.session['student_id'])
         return render(request, 'student_app/books.html', context)
 
-    elif request.session['user_type'] == 'staff':
+    elif request.session['user_type'] == 'staff':                       # if user is staff and librarian then show menu with add, delete, lend, return options
         context = staff_context(request.session['staff_id'])
 
         if action == 'add_record':
-            if "search" in request.POST:                # Return matching books
+            if "search" in request.POST:                                # Return matching books
                 book_name = request.POST['book_name']
                 results   = Book.objects.filter(name__contains=book_name) if Book.objects.filter(name__contains=book_name).count() else False
                 if not results:
-                    messages.success(request, "No Records found")
+                    messages.success(request, "No Records found")       # No books found with given name
                 else:
                     context['search'] = True
                     context['books']  = results
                     return render(request, 'staff/add-record.html', context)
                 return redirect('books', action='add_record')
 
-            elif "lend" in request.POST:               # Add borrow record
+            elif "lend" in request.POST:                                # Add borrow record
                 student_id = request.POST['student_id']
                 isbn       = request.POST['isbn']
 
-                if Student.objects.filter(student_id=student_id).exists() and Book.objects.filter(isbn=isbn).exists():
+                if Student.objects.filter(student_id=student_id).exists() and Book.objects.filter(isbn=isbn).exists():      # If given student and book exists
                     student = Student.objects.filter(student_id=student_id).get()
                     book    = Book.objects.filter(isbn=isbn).get()
                 else:
                     messages.error(request, "Invalid ISBN or Student ID")
                     return redirect('books', action='add_record')
 
-                new_borrow_record = BorrowRecord(student=student, book=book)
+                new_borrow_record = BorrowRecord(student=student, book=book)    # Add borrowed book record
                 new_borrow_record.save()
                 messages.success(request, "Success !")
                 return redirect('books', action='add_record')
@@ -188,27 +204,27 @@ def books(request, action='view'):
 
             return render(request, 'staff/add-record.html', context)
         
-        elif action == "delete_record":
+        elif action == "delete_record":                                         # if book is returned by student delete the borrow record
             if "search" in request.POST:
-                if Student.objects.filter(student_id=request.POST['student_id']).exists():
-                    student = Student.objects.filter(student_id=request.POST['student_id']).get()
+                if Student.objects.filter(student_id=request.POST['student_id']).exists():          # if given student_id exists
+                    student = Student.objects.filter(student_id=request.POST['student_id']).get()   # get student object
                 else:
                     messages.error(request, "Invalid Student ID")
                     return redirect('books', action='delete_record')
-                borrowed_books = student.borrowrecord_set.all()
-                results = True if borrowed_books.count() else False
+                borrowed_books = student.borrowrecord_set.all()                 # get list of borrowed books by student
+                results = True if borrowed_books.count() else False             # if borrowed books > 1 then results = True else False
                 if not results:
-                    messages.error(request, "No records found")
+                    messages.error(request, "No records found")                 # if count is 0
                     return redirect('books', action='delete_record')
                 context['borrowed_books'] = borrowed_books
                 context['search']         = True
                 return render(request, 'staff/delete-record.html', context)
             
-            elif "return" in request.POST:
-                returned_books = request.POST.getlist('book_list[]')
+            elif "return" in request.POST:                                      # when book is marked as returned
+                returned_books = request.POST.getlist('book_list[]')            # get the list of books returned by student
                 for b in returned_books:
                     book = BorrowRecord.objects.filter(id=b)
-                    book.delete()
+                    book.delete()                                               # delete borrow record
                 messages.success(request, "Books marked as returned")
                 return redirect('books', action='delete_record')
 
@@ -225,27 +241,10 @@ def books(request, action='view'):
                 return redirect('books', action='add')
             return render(request, 'staff/add-book.html', context)
 
-        elif action == "view":
+        elif action == "view":                     # View books in database
             books   = Book.objects.all()
             context['books'] = books
             return render(request, 'staff/view-books.html', context)
-
-        
-
-def profile(request):
-
-    
-    if 'user_type' not in request.session.keys():                   # if not logged in then redirect to home page
-        return redirect('/')
-
-    if request.session['user_type'] == 'student':                    # if user is student then display student's profile
-        context = student_context(request.session['student_id'])
-        return render(request, 'student_app/profile.html', context)
-
-    elif request.session['user_type'] == 'staff':                   # if user is staff then display staff's profile
-        context = staff_context(request.session['staff_id'])
-        request.session['cc'] = context['cc']                        # if teaching staff then "Attendance" menu will be visible if librarian then books
-        return render(request, 'staff/profile.html', context)
     
 
 def notice(request, action='view'):
@@ -253,16 +252,16 @@ def notice(request, action='view'):
     if 'user_type' not in request.session.keys():
         return redirect('/')
     
-    if request.session['user_type'] == 'student':
+    if request.session['user_type'] == 'student':                                   # if student then get the list of notices of his/her class
         context             = student_context(request.session['student_id'])
-        no_notice           = True if context['student']._class.notice_set.all().count() == 0 else False
+        no_notice           = True if context['student']._class.notice_set.all().count() == 0 else False        # if no notice added by any teacher
         if no_notice:
             context['notices'] = no_notice
         else:
-            context['notices']  = context['student']._class.notice_set.all()[:10]
+            context['notices']  = context['student']._class.notice_set.all()[:10]   # get the last 10 notices
         return render(request, 'student_app/notice.html', context)
 
-    elif request.session['user_type'] == 'staff':
+    elif request.session['user_type'] == 'staff':                                   # If user is staff then he/she will be able to add and view notices
         context = staff_context(request.session['staff_id'])
         request.session['cc'] = context['cc']
         if request.session['cc'] == True:
@@ -276,26 +275,26 @@ def notice(request, action='view'):
                 'cc' : True
             }
             
-            if action == 'view':
-                if request.method == "POST":
+            if action == 'view':                                                    # show all the notices added by current staff
+                if request.method == "POST":                                        # POST method is called when pressed on delete
                     noteid  = request.POST['id']
                     Notice.objects.filter(pk=noteid).delete()
                     messages.success(request, "Notice Deleted!")
                     return redirect('notice', action='view')
                 return render(request, 'staff/view-notice.html', context)
                 
-            else:
-                if request.method == "POST":
+            else:                                                                   # delete the notice
+                if request.method == "POST":                                        # adding the notice
 
                     title      = request.POST['title']
                     notice     = request.POST['notice']
                     class_list = request.POST.getlist('class_list[]')
 
-                    notice = Notice(title=title, notice=notice, added_by=staff)
-                    notice.save()
+                    notice = Notice(title=title, notice=notice, added_by=staff)     
+                    notice.save()                                                   # notice added
                     for class_name in class_list:
                         c = Class.objects.filter(name=class_name).get()
-                        notice.class_obj.add(c)
+                        notice.class_obj.add(c)                                     # add notice to all the classes checked by staff
                     messages.success(request, "Notice Added!")
                     return redirect('notice', action='add')
                 
@@ -309,11 +308,11 @@ def attendance(request, class_name):
     if 'user_type' not in request.session.keys():
         return redirect('/')
 
-    if request.session['cc'] == True:
+    if request.session['cc'] == True:                                               # If teaching staff then process the request else redirect
         if request.method == "POST":
             values      = request.POST.getlist('student_list[]')
             subject     = Subject.objects.filter(name=request.POST['subject']).get()
-            unique_id   = str(uuid.uuid4())
+            unique_id   = str(uuid.uuid4())                                         # generate unique randomg string for current attendance instance
             staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
             _class      = Class.objects.filter(name=class_name).get()
             students    = _class.student_set.all()
@@ -327,7 +326,7 @@ def attendance(request, class_name):
         students    = _class.student_set.all()                     # _class gets list of all students from that class
         staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
         subjects    = _class.subjects.all()
-        classes     = staff.classes.all()                          # classes if a list of classes to display in Attendance section if cc
+        classes     = staff.classes.all()                          # classes is a list of classes to display in Attendance section if teaching staff
         context     = {
             'staff'     : staff,
             'classes'   : classes,
@@ -356,7 +355,7 @@ def student_attendance(request):
         for subject in subjects:
             total           = Attendance.objects.filter(student=student).filter(subject=subject).count()                        # total lectures conducted
             attended        = Attendance.objects.filter(student=student).filter(subject=subject).filter(status=True).count()    # total lectures attended by student
-            percent         = 0.0 if not total else (attended/total)*100 # Avoid division if total is zero
+            percent         = 0.0 if not total else (attended/total)*100                                                        # Avoid division if total is zero
             percent_count += percent
             attendance[subject.name] = [
                 total, 
@@ -365,19 +364,19 @@ def student_attendance(request):
             ]
         avg_attendance = percent_count / len(subjects)                  # Calculate Average attendance
         context['attendance'] = attendance
-        context['avg_attendance'] = "{:.2f}".format(avg_attendance)
+        context['avg_attendance'] = "{:.2f}".format(avg_attendance)     # round number to two points
     return render(request, 'student_app/attendance.html', context)
     
 
 def results(request):
 
-    if request.session['user_type'] == 'student':
+    if request.session['user_type'] == 'student':                       # if user type is student then process request else redirect
         context   = student_context(request.session['student_id'])
-        if context['student'].exam_set.filter(name='unit1').count():
+        if context['student'].exam_set.filter(name='unit1').count():    # if unit1 test results are present then get the object else unit1 = False
             unit1 = context['student'].exam_set.filter(name='unit1')
         else:
             unit1 = False
-        if context['student'].exam_set.filter(name='unit2').count():
+        if context['student'].exam_set.filter(name='unit2').count():    # if unit2 test results are present then get the object else unit2 = False
             unit2 = context['student'].exam_set.filter(name='unit2')
         else:
             unit2 = False
@@ -392,19 +391,18 @@ def exam(request, class_name):
     if 'user_type' not in request.session.keys():
         return redirect('/')
         
-    if request.session['cc'] == True:
+    if request.session['cc'] == True:                               # if teaching staff then process request else redirect to home
         if request.method == "POST":
-            student_ids = request.POST.getlist('student_list[]')
-            mark_list   = request.POST.getlist('mark_list[]')
+            student_ids = request.POST.getlist('student_list[]')    # get the list of students
+            mark_list   = request.POST.getlist('mark_list[]')       # get the list of marks obtained
             subject     = Subject.objects.filter(name=request.POST['subject']).get()
             exam        = request.POST['exam']
-            unique_id   = str(uuid.uuid4())
             staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
             _class      = Class.objects.filter(name=class_name).get()
             students    = _class.student_set.all()
             for student in students:
-                obtained_marks = 0 if mark_list[student_ids.index(student.student_id)] == '' else mark_list[student_ids.index(student.student_id)]  
-                if Exam.objects.filter(name=exam, subject=subject, student=student).exists():               # If test results already exists then update existing one
+                obtained_marks = 0 if mark_list[student_ids.index(student.student_id)] == '' else mark_list[student_ids.index(student.student_id)]  # if empty marks consider 0
+                if Exam.objects.filter(name=exam, subject=subject, student=student).exists():               # If test results already exists then update existing record
                     old_record = Exam.objects.filter(name=exam, subject=subject, student=student).get()
                     old_record.marks = obtained_marks
                     old_record.save()
@@ -446,7 +444,7 @@ def update(request):
             student.first_name  = first_name
             student.last_name   = last_name
             student.email       = email
-            student.save()
+            student.save()                      # Save updated values
             messages.success(request, 'Profile Updated!')
             return redirect('profile')
     
@@ -459,7 +457,7 @@ def update(request):
         staff.first_name    = first_name
         staff.last_name     = last_name
         staff.email         = email
-        staff.save()
+        staff.save()                           # Save updated values
         messages.success(request, 'Profile Updated!')
         return redirect('profile')
     
@@ -475,4 +473,4 @@ def logout(request):
     for key in list(request.session.keys()):
         del request.session[key]
 
-    return redirect('/' if student else 'staff')
+    return redirect('/' if student else 'staff')    # after logout redirect to / if student else /staff if staff

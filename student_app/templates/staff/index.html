@@ -3,6 +3,18 @@
     <title>PICT | Student Management System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {% include 'student_app/head.html' %}
+{% if register_msg %}
+<script>
+		$(document).ready(function(){
+            $("#login-form").hide()
+            $("#register-form").show()
+            $("#register-btn").removeClass("btn-light");
+            $("#register-btn").addClass("btn-primary");
+            $("#login-btn").removeClass("btn-primary");
+            $("#login-btn").addClass("btn-light");
+			});
+</script>
+{% endif %}
 </head>
 <body>
         <div class="container h-100">

@@ -7,8 +7,8 @@
 <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
 <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
 <script src="{% static 'student_app/js/docs.js' %}"></script>
-<style>
-</style>
+<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
 		{% include 'student_app/navbar.html' %}
@@ -19,10 +19,13 @@
           {{ message }}
       </div>
       {% endfor %}
-	  {% endif %}
+    {% endif %}
+    {% if not student.borrowrecord_set.all.count %}
+      <h2>You haven't borrowed any books!</h2>
+      {% else %}
+    
 	  	<div class="row justify-content-center align-items-center">
                 <div class="col-md-8 col-sm-10">
-                    <h3 class="text-center"> Borrowed Books </h3>
 		<table class="table table-hover table-striped">
                         <thead class="thead-dark">
                           <tr>
@@ -43,7 +46,8 @@
                         </tbody>
                 </table>
                 </div>
-		</div> 
+    </div> 
+    {% endif %}
 		</div>
 </body>
 </html>

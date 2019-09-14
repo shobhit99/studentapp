@@ -7,8 +7,7 @@
 <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
 <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
 <script src="{% static 'student_app/js/docs.js' %}"></script>
-<style>
-</style>
+<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
 		{% include 'staff/navbar.html' %}
@@ -28,7 +27,7 @@
 				<input type="text" name="title" class="form-control" placeholder="Title" maxlength="50">
 			</div>
 			<div class="form-group">
-					<textarea name="notice" class="form-control" maxlength="50" placeholder="Content"></textarea>
+					<textarea name="notice" class="form-control" maxlength="1000" placeholder="Content"></textarea>
 			</div>
 			{% for class in classes %}
 			<div class="form-check form-check-inline">
