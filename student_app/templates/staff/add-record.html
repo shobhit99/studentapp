@@ -34,7 +34,11 @@
                 <div class="form-group">
                     <input type="text" name="book_name" class="form-control" placeholder="Book Name" maxlength="50">
                 </div>
-                {% if search %}
+                <div class="form-group">
+                        <button class="btn btn-outline-primary" name="search">Search</button>
+                </div>
+            </form>  
+            {% if search %}
                 <table class="table table-hover table-striped">
                         <thead class="">
                           <tr>
@@ -51,11 +55,7 @@
                           {% endfor %}
                         </tbody>
                 </table>
-                {% endif %}
-                <div class="form-group">
-                        <button class="btn btn-outline-primary" name="search">Search</button>
-                </div>
-            </form>    
+                {% endif %}  
         <form method="POST" action="{% url 'books' action='add_record' %}">
           {% csrf_token %}
 		  	<div class="form-group">

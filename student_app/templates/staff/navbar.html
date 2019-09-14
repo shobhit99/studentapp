@@ -58,7 +58,8 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{% url 'books' action='view' %}">View Books</a>
                                 <a class="dropdown-item" href="{% url 'books' action='add' %}">Add Books</a>
-                                <a class="dropdown-item" href="{% url 'books' action='add_record' %}">Add Record</a>
+                                <a class="dropdown-item" href="{% url 'books' action='add_record' %}">Lend</a>
+                                <a class="dropdown-item" href="{% url 'books' action='delete_record' %}">Return</a>
                                 </div>
                                     </li>
                         {% endif %}

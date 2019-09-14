@@ -159,10 +159,9 @@ def books(request, action='view'):
     if 'user_type' not in request.session.keys():                       
         return redirect('/')
     
-    
     if request.session['user_type'] == 'student':
-        context = student_context(request.session['student_id'])
-        return render(request, 'student_app/dashboard.html', context)
+        context         = student_context(request.session['student_id'])
+        return render(request, 'student_app/books.html', context)
 
     elif request.session['user_type'] == 'staff':
         context = staff_context(request.session['staff_id'])
@@ -190,7 +189,6 @@ def books(request, action='view'):
                     messages.error(request, "Invalid ISBN or Student ID")
                     return redirect('books', action='add_record')
 
-
                 new_borrow_record = BorrowRecord(student=student, book=book)
                 new_borrow_record.save()
                 messages.success(request, "Success !")
@@ -198,8 +196,35 @@ def books(request, action='view'):
 
 
             return render(request, 'staff/add-record.html', context)
+        
+        elif action == "delete_record":
+            if "search" in request.POST:
+                if Student.objects.filter(student_id=request.POST['student_id']).exists():
+                    student = Student.objects.filter(student_id=request.POST['student_id']).get()
+                else:
+                    messages.error(request, "Invalid Student ID")
+                    return redirect('books', action='delete_record')
+                borrowed_books = student.borrowrecord_set.all()
+                results = True if borrowed_books.count() else False
+                if not results:
+                    messages.error(request, "No records found")
+                    return redirect('books', action='delete_record')
+                context['borrowed_books'] = borrowed_books
+                context['search']         = True
+                return render(request, 'staff/delete-record.html', context)
+            
+            elif "return" in request.POST:
+                returned_books = request.POST.getlist('book_list[]')
+                for b in returned_books:
+                    book = BorrowRecord.objects.filter(id=b)
+                    book.delete()
+                messages.success(request, "Books marked as returned")
+                return redirect('books', action='delete_record')
 
-        elif action == "add":
+
+            return render(request, 'staff/delete-record.html', context)
+
+        elif action == "add":                       # Add books to database   
             if request.method == "POST":
                 book_name = request.POST['book_name']
                 isbn      = request.POST['isbn']

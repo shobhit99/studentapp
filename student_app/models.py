@@ -59,7 +59,7 @@ class Student(models.Model):
     register_time   = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return '{}'.format(self.first_name + self.last_name)
+        return '{} {}'.format(self.first_name, self.last_name)
 
 
 class Attendance(models.Model):
@@ -114,4 +114,4 @@ class BorrowRecord(models.Model):
     borrow_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return "{} {} {}".format(student, book, borrow_time)
+        return "{} {} {}".format(self.student, self.book, self.borrow_time)
