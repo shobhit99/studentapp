@@ -9,6 +9,9 @@ import uuid
 # Create your views here.
 def index(request):
 
+    if 'user_type' in request.session.keys():                       # redirect to profile if logged in
+            return redirect('profile')
+
     if request.method == 'POST':
         if 'login-form' in request.POST:
 
@@ -24,9 +27,9 @@ def index(request):
                         for key in list(request.session.keys()):        # Delete previous session if any
                             del request.session[key]
 
-                        request.session['user_type'] = 'student'        # user_type in sessions variable will decide dashboard and contents
+                        request.session['user_type'] = 'student'        # user_type in sessions variable will decide contents
                         request.session['student_id'] = student.student_id
-                        return redirect('dashboard')
+                        return redirect('profile')
                     else:
                         messages.error(request, 'Login ID or password incorrect')
                         return redirect('/')
@@ -76,6 +79,9 @@ def index(request):
 
 def staff(request):
 
+    if 'user_type' in request.session.keys():                       # redirect to profile if logged in
+            return redirect('profile')
+
     if request.method == 'POST':
         if 'login-form' in request.POST:
 
@@ -91,7 +97,7 @@ def staff(request):
                         
                         request.session['user_type'] = 'staff'          # user type will decide contents
                         request.session['staff_id']  = staff.staff_id
-                        return redirect('dashboard')
+                        return redirect('profile')
                     else:
                         messages.error(request, 'Login ID or password incorrect')
                         return redirect('staff')
@@ -139,27 +145,12 @@ def staff(request):
     return render(request, 'staff/index.html', context)
 
 
-def dashboard(request):
-
-    if 'user_type' not in request.session.keys():                       # if not logged in then redirect to home page
-        return redirect('/')
-    
-    
-    if request.session['user_type'] == 'student':                       # if user is student then display student dashboard
-        context = student_context(request.session['student_id'])
-        return render(request, 'student_app/dashboard.html', context)
-
-    elif request.session['user_type'] == 'staff':                       # if user is staff then display staff's dashboard
-        context = staff_context(request.session['staff_id'])
-        request.session['cc'] = context['cc']                           # if staff then "Attendance" menu will be visible
-        return render(request, 'staff/dashboard.html', context)
-
 def books(request, action='view'):
 
-    if 'user_type' not in request.session.keys():                       
+    if 'user_type' not in request.session.keys():                       # if not logged in then redirect to home page   
         return redirect('/')
     
-    if request.session['user_type'] == 'student':
+    if request.session['user_type'] == 'student':                       
         context         = student_context(request.session['student_id'])
         return render(request, 'student_app/books.html', context)
 
@@ -244,16 +235,16 @@ def books(request, action='view'):
 def profile(request):
 
     
-    if 'user_type' not in request.session.keys():
+    if 'user_type' not in request.session.keys():                   # if not logged in then redirect to home page
         return redirect('/')
 
-    if request.session['user_type'] == 'student':
+    if request.session['user_type'] == 'student':                    # if user is student then display student's profile
         context = student_context(request.session['student_id'])
         return render(request, 'student_app/profile.html', context)
 
-    elif request.session['user_type'] == 'staff':
+    elif request.session['user_type'] == 'staff':                   # if user is staff then display staff's profile
         context = staff_context(request.session['staff_id'])
-        request.session['cc'] = context['cc']
+        request.session['cc'] = context['cc']                        # if teaching staff then "Attendance" menu will be visible if librarian then books
         return render(request, 'staff/profile.html', context)
     
 
@@ -383,11 +374,11 @@ def results(request):
     if request.session['user_type'] == 'student':
         context   = student_context(request.session['student_id'])
         if context['student'].exam_set.filter(name='unit1').count():
-            unit1 = context['student'].exam_set.filter(name='unit1').get()
+            unit1 = context['student'].exam_set.filter(name='unit1')
         else:
             unit1 = False
         if context['student'].exam_set.filter(name='unit2').count():
-            unit2 = context['student'].exam_set.filter(name='unit1').get()
+            unit2 = context['student'].exam_set.filter(name='unit2')
         else:
             unit2 = False
         context['unit1'] = unit1
@@ -439,6 +430,40 @@ def exam(request, class_name):
         return render(request, 'staff/exam.html', context)
     else:
         return redirect('/')
+
+
+def update(request):
+
+    if 'user_type' not in request.session.keys():
+        return redirect('/')
+    if request.session['user_type'] == 'student':
+        context   = student_context(request.session['student_id'])
+        if request.method == "POST":
+            first_name          = request.POST['first_name']
+            last_name           = request.POST['last_name']
+            email               = request.POST['email']
+            student             = Student.objects.filter(student_id=context['student'].student_id).get()
+            student.first_name  = first_name
+            student.last_name   = last_name
+            student.email       = email
+            student.save()
+            messages.success(request, 'Profile Updated!')
+            return redirect('profile')
+    
+    elif request.session['user_type'] == 'staff':
+        context = staff_context(request.session['staff_id'])
+        first_name          = request.POST['first_name']
+        last_name           = request.POST['last_name']
+        email               = request.POST['email']
+        staff               = Staff.objects.filter(staff_id=context['staff'].staff_id).get()
+        staff.first_name    = first_name
+        staff.last_name     = last_name
+        staff.email         = email
+        staff.save()
+        messages.success(request, 'Profile Updated!')
+        return redirect('profile')
+    
+    return redirect('profile')
 
 
 def logout(request):

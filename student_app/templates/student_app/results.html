@@ -23,10 +23,12 @@
 						  </tr>
 						</thead>
 						<tbody>
+							{% for u in unit1 %}
 						  <tr>
-							<td>{{ unit1.subject }}</td>
-                            <td>{{ unit1.marks }}</td>
-                            <td>30</td>
+							<td>{{ u.subject }}</td>
+                            <td>{{ u.marks }}</td>
+							<td>30</td>
+							{% endfor %}
 						  </tr>
 						</tbody>
                       </table>
@@ -42,10 +44,12 @@
 						  </tr>
 						</thead>
 						<tbody>
+								{% for u in unit1 %}
 						  <tr>
-							<td>{{ unit2.subject }}</td>
-                            <td>{{ unit2.marks }}</td>
-                            <td>30</td>
+							<td>{{ u.subject }}</td>
+                            <td>{{ u.marks }}</td>
+							<td>30</td>
+							{% endfor %}
 						  </tr>
 						</tbody>
                       </table>
