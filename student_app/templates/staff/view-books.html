@@ -51,7 +51,7 @@
                             </div>
                             <div class="modal-body">
                               {% for b in book.borrowrecord_set.all %}
-                              <span class="text-muted"> {{ b.student.student_id }}</span>
+                              <span class="text-muted"><a href="{% url 'details' student_id=b.student.student_id %}" target="_blank">{{ b.student.student_id }}</a></span>
                               <span class="text-dark">{{ b.student }}</span>
                               <span class="text-info"> {{ b.borrow_time }}</span><br>
                               {% endfor %}

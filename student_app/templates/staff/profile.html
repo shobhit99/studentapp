@@ -12,39 +12,47 @@
 <body>
     {% include 'staff/navbar.html' %}
     <div class="container-fluid">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-md-5 col-sm-6">
-            <h2 class="text-center">Profile</h2>
-            <div class="card">
-            <div class="card-body">
-                <form method="POST" action="{% url 'update' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input class="form-control" readonly value="{{ staff.staff_id }} ">
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                        <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ staff.first_name }}">&nbsp;&nbsp;
-                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" value="{{ staff.last_name }}">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-5 col-sm-6">
+                <h2 class="text-center">Profile</h2>
+                <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'update' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input class="form-control" readonly value="{{ staff.staff_id }} ">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" name="email" class="form-control" placeholder="Email" value="{{ staff.email }}">
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                        <input type="text" class="form-control" value="{{ staff.designation }}" readonly>&nbsp;&nbsp;
-                        <input type="text" class="form-control" value="{{ staff.department }}" readonly>
+                        <div class="form-group">
+                            <div class="input-group">
+                            <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ staff.first_name }}">&nbsp;&nbsp;
+                            <input type="text" name="last_name" class="form-control" placeholder="Last Name" value="{{ staff.last_name }}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">          
-                        <input class="form-control" value="{{ staff.register_time }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-outline-dark" name="update">Update</button>
-                    </div>
-                </form>
-            </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Email" value="{{ staff.email }}">
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                            <input type="text" class="form-control" value="{{ staff.designation }}" readonly>&nbsp;&nbsp;
+                            <input type="text" class="form-control" value="{{ staff.department }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">          
+                            <input class="form-control" value="{{ staff.register_time }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline-dark" name="update">Update</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
             </div>
         </div>
     </div>

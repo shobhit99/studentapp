@@ -1,0 +1,51 @@
+<html>
+<head>
+    {% load static %}
+    <title>PICT | Staff Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'student_app/head.html' %}
+    <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+    <script src="{% static 'student_app/js/docs.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+</head>
+<body>
+    {% include 'staff/navbar.html' %}
+    <div class="container-fluid">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-md-5 col-sm-6">
+            <h2 class="text-center">{{ student.first_name }} {{ student.last_name }} </h2>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="text-secondary">Student ID</th>
+                        <td class="bg-light">{{ student.student_id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-secondary">Name</th>
+                        <td class="bg-light">{{ student.first_name }} {{ student.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-secondary">Email</th>
+                        <td class="bg-light">{{ student.email }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-secondary">Mobile no</th>
+                        <td class="bg-light">{{ student.mobile_no }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-secondary">Attendance</th>
+                        <td class="bg-light">{{ avg_attendance }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-secondary">Registration Date</th>
+                        <td class="bg-light">{{ student.register_time }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+     
+     

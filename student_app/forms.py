@@ -70,6 +70,14 @@ class StudentRegister(forms.Form):
             'class' : 'form-control custom-select'
         }))
 
+    mobile_no  = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'type' : 'text',
+            'class' : 'form-control',
+            'placeholder' : 'Mobile No',
+            'minlength' : '10',
+            'maxlength' : '10',
+            }))
 
 class StudentLogin(forms.Form):
 

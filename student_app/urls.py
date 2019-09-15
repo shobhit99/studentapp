@@ -13,5 +13,6 @@ urlpatterns = [
     path('exam/<class_name>', views.exam, name='exam'),
     path('books/<action>', views.books, name='books'),
     path('update/', views.update, name='update'),
+    path('details/<student_id>', views.details, name='details'),
     path('logout/', views.logout, name='logout')
 ]
