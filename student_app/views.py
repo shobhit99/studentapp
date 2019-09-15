@@ -36,6 +36,9 @@ def index(request):
                     else:
                         messages.error(request, 'Login ID or password incorrect')
                         return redirect('/')
+                else:
+                    messages.error(request, 'Login ID or password incorrect')
+                    return redirect('/')
                 
         elif 'register-form' in request.POST:                       # If register request
             
