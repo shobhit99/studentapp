@@ -57,7 +57,7 @@ class Student(models.Model):
     department      = models.ForeignKey(Department, on_delete = models.CASCADE)
     _class          = models.ForeignKey(Class, on_delete = models.CASCADE)
     register_time   = models.DateTimeField(default=timezone.now)
-    mobile_no       = models.IntegerField()
+    mobile_no       = models.IntegerField(null=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
