@@ -108,6 +108,9 @@ def staff(request):
                     else:
                         messages.error(request, 'Login ID or password incorrect')           # if wrong user / pass combination display error
                         return redirect('staff')
+                else:
+                    messages.error(request, 'Login ID or password incorrect')
+                    return redirect('/')
                 
 
         elif 'register-form' in request.POST:                                               # If request for registration
@@ -358,7 +361,7 @@ def student_attendance(request):
         for subject in subjects:
             total           = Attendance.objects.filter(student=student).filter(subject=subject).count()                        # total lectures conducted
             attended        = Attendance.objects.filter(student=student).filter(subject=subject).filter(status=True).count()    # total lectures attended by student
-            percent         = 0.0 if not total else (attended/total)*100                                                        # Avoid division if total is zero
+            percent         = 100 if not total else (attended/total)*100                                                        # Avoid division if total is zero
             percent_count += percent
             attendance[subject.name] = [
                 total, 
