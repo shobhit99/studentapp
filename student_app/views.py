@@ -264,7 +264,7 @@ def notice(request, action='view'):
         if no_notice:
             context['notices'] = no_notice
         else:
-            context['notices']  = context['student']._class.notice_set.all()[:10]   # get the last 10 notices
+            context['notices']  = context['student']._class.notice_set.all().order_by('-id')[:10]   # get the last 10 notices
         return render(request, 'student_app/notice.html', context)
 
     elif request.session['user_type'] == 'staff':                                   # If user is staff then he/she will be able to add and view notices
@@ -273,7 +273,7 @@ def notice(request, action='view'):
         if request.session['cc'] == True:
             staff       = Staff.objects.filter(staff_id=request.session['staff_id']).get()
             classes     = staff.classes.all()
-            notices     = staff.notice_set.all()[:10]
+            notices     = staff.notice_set.all().order_by('-id')[:10]
             context = {
                 'staff'   : staff,
                 'classes' : classes,
@@ -358,19 +358,22 @@ def student_attendance(request):
         subjects           = _class.subjects.all()  # get subjects of student
         attendance = {}
         percent_count = 0
+        subject_count = 0
         for subject in subjects:
             total           = Attendance.objects.filter(student=student).filter(subject=subject).count()                        # total lectures conducted
             attended        = Attendance.objects.filter(student=student).filter(subject=subject).filter(status=True).count()    # total lectures attended by student
-            percent         = 100 if not total else (attended/total)*100                                                        # Avoid division if total is zero
+            percent         = 0 if not total else (attended/total)*100                                                          # Avoid division if total is zero
+            if total:
+                subject_count += 1
             percent_count += percent
             attendance[subject.name] = [
                 total, 
                 attended,
                 "{:.2f}".format(percent)
             ]
-        avg_attendance = percent_count / len(subjects)                  # Calculate Average attendance
+        avg_attendance = "N/A" if subject_count == 0 else (percent_count / subject_count)                          # Calculate Average attendance
         context['attendance'] = attendance
-        context['avg_attendance'] = "{:.2f}".format(avg_attendance)     # round number to two points
+        context['avg_attendance'] = "N/A" if avg_attendance == "N/A" else "{:.2f}".format(avg_attendance)          # round number to two points
     return render(request, 'student_app/attendance.html', context)
     
 

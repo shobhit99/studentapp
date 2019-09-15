@@ -21,6 +21,7 @@
 	  {% endif %}
 	  	<div class="row h-100 justify-content-center align-items-center">
 		<div class="col-md-4 col-sm-6">
+				<h3 class="text-center text-muted">Add Notice</h3>
         <form id="student-attendance" method="POST" action="{% url 'notice' action='add' %}">
           {% csrf_token %}
 		  	<div class="form-group">

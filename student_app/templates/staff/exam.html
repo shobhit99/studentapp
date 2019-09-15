@@ -19,6 +19,7 @@
       </div>
       {% endfor %}
       {% endif %}
+      <h3 class="text-center text-muted">{{ class|upper }}</h3>
         <form id="student-attendance" method="POST" action="{% url 'exam' class_name=class.name %}">
           {% csrf_token %}
                     <table class="table table-hover table-striped">
@@ -27,7 +28,7 @@
                                 <th scope="col"># Student ID</th>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
-                                <th scope="col" style="width:  10%">Marks</th>
+                                <th scope="col" style="width:  13%">Marks</th>
                               </tr>
                             </thead>
                             <tbody class="">

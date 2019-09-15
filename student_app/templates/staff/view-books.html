@@ -53,7 +53,7 @@
                                     {% for b in book.borrowrecord_set.all %}
                                    <span class="text-muted"> {{ b.student.student_id }}</span>
                                    <span class="text-dark">{{ b.student }}</span>
-                                   <span class="text-info"> {{ b.borrow_time }}</span>
+                                   <span class="text-info"> {{ b.borrow_time }}</span><br>
                                     {% endfor %}
                                   </div>
                                   <div class="modal-footer">

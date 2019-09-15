@@ -19,6 +19,7 @@
       </div>
       {% endfor %}
       {% endif %}
+      <h3 class="text-center text-muted">{{ class|upper }} Attendance</h3>
         <form id="student-attendance" method="POST" action="{% url 'attendance' class_name=class.name %}">
           {% csrf_token %}
                     <table class="table table-hover table-striped">
