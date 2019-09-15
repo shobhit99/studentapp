@@ -1,72 +1,72 @@
 <html>
 <head>
-	{% load static %}
+    {% load static %}
     <title>PICT | Student Management System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-{% include 'student_app/head.html' %}
-<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
-<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
-<script src="{% static 'student_app/js/docs.js' %}"></script>
-<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'student_app/head.html' %}
+    <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+    <script src="{% static 'student_app/js/docs.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
-		{% include 'staff/navbar.html' %}
-		<div class="container-fluid">
+    {% include 'staff/navbar.html' %}
+    <div class="container-fluid">
       {% if messages %}
       {% for message in messages %}
       <div class="alert alert-success" role="alert">
           {{ message }}
       </div>
       {% endfor %}
-	  {% endif %}
-	  	<div class="row justify-content-center align-items-center">
-                <div class="col-md-8 col-sm-10">
-		<table class="table table-hover table-striped">
-                        <thead class="thead-dark">
-                          <tr>
-                            <th scope="col" class="text-center">ISBN</th>
-                            <th scope="col" class="text-center">Title</th>
-                            <th scope="col" class="text-center">Borrowed By</th>
-                          </tr>
-                        </thead>
-                        <tbody class="">
-                            {% for book in books %}
-                          <tr>
-                            <td class="text-center">{{ book.isbn }}</td>
-                            <td class="text-center">{{ book.name }}</td>
-                            <td class="text-center"><span class="badge badge-dark">{{ book.borrowrecord_set.all.count }} </span>
-                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#isbn{{ book.isbn }}">
-                                    View
-                                  </button>
-                            </td>
-                          </tr>
-                          <div class="modal fade" id="isbn{{ book.isbn }}" tabindex="-1" role="dialog" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalScrollableTitle">{{ book.name }} : Borrowed By</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </div>
-                                  <div class="modal-body">
-                                    {% for b in book.borrowrecord_set.all %}
-                                   <span class="text-muted"> {{ b.student.student_id }}</span>
-                                   <span class="text-dark">{{ b.student }}</span>
-                                   <span class="text-info"> {{ b.borrow_time }}</span><br>
-                                    {% endfor %}
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  </div>
-                                </div>
-                              </div>
+      {% endif %}
+      <div class="row justify-content-center align-items-center">
+          <div class="col-md-8 col-sm-10">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                      <th scope="col" class="text-center">ISBN</th>
+                      <th scope="col" class="text-center">Title</th>
+                      <th scope="col" class="text-center">Borrowed By</th>
+                  </tr>
+                </thead>
+                <tbody class="">
+                  {% for book in books %}
+                  <tr>
+                      <td class="text-center">{{ book.isbn }}</td>
+                      <td class="text-center">{{ book.name }}</td>
+                      <td class="text-center"><span class="badge badge-dark">{{ book.borrowrecord_set.all.count }} </span>
+                        <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#isbn{{ book.isbn }}">
+                        View
+                        </button>
+                      </td>
+                  </tr>
+                  <div class="modal fade" id="isbn{{ book.isbn }}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalScrollableTitle">{{ book.name }} : Borrowed By</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
                             </div>
-                          {% endfor %}
-                        </tbody>
-                </table>
-                </div>
-		</div> 
-		</div>
+                            <div class="modal-body">
+                              {% for b in book.borrowrecord_set.all %}
+                              <span class="text-muted"> {{ b.student.student_id }}</span>
+                              <span class="text-dark">{{ b.student }}</span>
+                              <span class="text-info"> {{ b.borrow_time }}</span><br>
+                              {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
 </body>
-</html>
+</html> 

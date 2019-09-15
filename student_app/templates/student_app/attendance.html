@@ -1,46 +1,46 @@
 <html>
 <head>
 	{% load static %}
-    <title>PICT | Student Management System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-{% include 'student_app/head.html' %}
-<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
-<script src="{% static 'student_app/js/docs.js' %}"></script>
-<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+	<title>PICT | Student Management System</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{% include 'student_app/head.html' %}
+	<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+	<script src="{% static 'student_app/js/docs.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
-		{% include 'student_app/navbar.html' %}
-		<div class="container-fluid">
-			<div class="row justify-content-center align-items-center">
+	{% include 'student_app/navbar.html' %}
+	<div class="container-fluid">
+		<div class="row justify-content-center align-items-center">
 			<div class="col-md-6 col-sm-8">
-				<table class="table">
-						<thead class="thead-dark">
-						  <tr>
-							<th scope="col">Subject</th>
-							<th scope="col">Total Lectures</th>
-							<th scope="col">Attended</th>
-							<th scope="col">Percent</th>
-						  </tr>
-						</thead>
-						<tbody>
-							{% for key, values in attendance.items %}
-						  <tr>
-							<td>{{ key }}</td>
-							{% for v in values %}
-								<td>{{ v }}</td>
-							{% endfor %}
-						  </tr>
-						  {% endfor %}
-						  <tr>
-							  <td></td>
-							  <td></td>
-							  <td></td>
-							  <td><b>Average {{ avg_attendance }} {% if avg_attendance != 'N/A' %} % {% endif %}</b></td>
-						  </tr>
-						</tbody>
-					  </table>
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Subject</th>
+						<th scope="col">Total Lectures</th>
+						<th scope="col">Attended</th>
+						<th scope="col">Percent</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for key, values in attendance.items %}
+					<tr>
+						<td>{{ key }}</td>
+						{% for v in values %}
+						<td>{{ v }}</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><b>Average {{ avg_attendance }} {% if avg_attendance != 'N/A' %} % {% endif %}</b></td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
 		</div>
-		</div>
-		</div>
+	</div>
 </body>
-</html>
+</html>	 

@@ -1,43 +1,40 @@
 <html>
 <head>
-	{% load static %}
+    {% load static %}
     <title>PICT | Student Management System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-{% include 'student_app/head.html' %}
-<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
-<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
-<script src="{% static 'student_app/js/docs.js' %}"></script>
-<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
-<style>
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'student_app/head.html' %}
+    <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+    <script src="{% static 'student_app/js/docs.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+    <style></style>
 </head>
 <body>
-		{% include 'student_app/navbar.html' %}
-		<div class="container-fluid">
-            {% if notices == True %}
-            <h1>No Notice yet!</h1>
-            {% else %}
-            <div class="row">
-                    {% for notice in notices %}
-                    <div class="col-md-4 col-sm-6">  
-                <form name="note-delete" method="POST" action="{% url 'notice' action='view' %}">
-                    {% csrf_token %}     
+    {% include 'student_app/navbar.html' %}
+    <div class="container-fluid">
+      {% if notices == True %}
+      <h1>No Notice yet!</h1>
+      {% else %}
+      <div class="row">
+          {% for notice in notices %}
+          <div class="col-md-4 col-sm-6">
+            <form name="note-delete" method="POST" action="{% url 'notice' action='view' %}">
+                {% csrf_token %}     
                 <div class="card border-dark mb-3">
-                        <div class="card-header">
-                                {{ notice.added_by }}
-                        </div>
-                        <div class="card-body text-dark">
-                          <h5 class="card-title">{{ notice.title }}</h5>
-                          <p class="card-text">{{ notice.notice }}</p>
-                        </div>
-                        
-                      </div>
-                 
-                </form>
-            </div>
-                 {% endfor %}
-                 {% endif %}
-            </div>
-		</div>
+                  <div class="card-header">
+                      {{ notice.added_by }}
+                  </div>
+                  <div class="card-body text-dark">
+                      <h5 class="card-title">{{ notice.title }}</h5>
+                      <p class="card-text">{{ notice.notice }}</p>
+                  </div>
+                </div>
+            </form>
+          </div>
+          {% endfor %}
+          {% endif %}
+      </div>
+    </div>
 </body>
 </html>

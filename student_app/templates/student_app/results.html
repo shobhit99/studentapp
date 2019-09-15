@@ -1,65 +1,67 @@
+
+
 <html>
 <head>
 	{% load static %}
-    <title>PICT | Student Management System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-{% include 'student_app/head.html' %}
-<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
-<script src="{% static 'student_app/js/docs.js' %}"></script>
-<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+	<title>PICT | Student Management System</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{% include 'student_app/head.html' %}
+	<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+	<script src="{% static 'student_app/js/docs.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
-		{% include 'student_app/navbar.html' %}
-		<div class="container-fluid">
-			{% if not unit1 and not unit2 %}
-				<h2>Results not published yet!</h2>
-			{% endif %}
-			<div class="row justify-content-center align-items-center">
+	{% include 'student_app/navbar.html' %}
+	<div class="container-fluid">
+		{% if not unit1 and not unit2 %}
+		<h2>Results not published yet!</h2>
+		{% endif %}
+		<div class="row justify-content-center align-items-center">
 			<div class="col-md-6 col-sm-8">
-				{% if unit1 %}
-				<h3 class="text-center">Unit I</h3>
-				<table class="table table-bordered">
-						<thead class="thead-dark">
-						  <tr>
-							<th scope="col">Subject</th>
-							<th scope="col">Marks Obtained</th>
-							<th scope="col">Total Marks</th>
-						  </tr>
-						</thead>
-						<tbody>
-							{% for u in unit1 %}
-						  <tr>
-							<td>{{ u.subject }}</td>
-                            <td>{{ u.marks }}</td>
-							<td>30</td>
-							{% endfor %}
-						  </tr>
-						</tbody>
-                      </table>
+			{% if unit1 %}
+			<h3 class="text-center">Unit I</h3>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Subject</th>
+						<th scope="col">Marks Obtained</th>
+						<th scope="col">Total Marks</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for u in unit1 %}
+					<tr>
+						<td>{{ u.subject }}</td>
+						<td>{{ u.marks }}</td>
+						<td>30</td>
+						{% endfor %}
+					</tr>
+				</tbody>
+			</table>
 			{% endif %}
 			{% if unit2 %}
-				<h3 class="text-center">Unit II</h3>
-				<table class="table table-bordered">
-						<thead class="thead-dark">
-						  <tr>
-							<th scope="col">Subject</th>
-							<th scope="col">Marks Obtained</th>
-							<th scope="col">Total Marks</th>
-						  </tr>
-						</thead>
-						<tbody>
-								{% for u in unit1 %}
-						  <tr>
-							<td>{{ u.subject }}</td>
-                            <td>{{ u.marks }}</td>
-							<td>30</td>
-							{% endfor %}
-						  </tr>
-						</tbody>
-                      </table>
-            {% endif %}
+			<h3 class="text-center">Unit II</h3>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Subject</th>
+						<th scope="col">Marks Obtained</th>
+						<th scope="col">Total Marks</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for u in unit1 %}
+					<tr>
+						<td>{{ u.subject }}</td>
+						<td>{{ u.marks }}</td>
+						<td>30</td>
+						{% endfor %}
+					</tr>
+				</tbody>
+			</table>
+			{% endif %}
+			</div>
 		</div>
-		</div>
-		</div>
+	</div>
 </body>
-</html>
+</html>	 

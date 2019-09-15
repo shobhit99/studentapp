@@ -3,30 +3,30 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
-		$(document).ready(function(){
-            $("#register-form").hide()
-			$("#login-btn").click(function(){
-                $("#register-form").hide()
-                $("#login-form").show()
-				$("#login-btn").removeClass("btn-light");
-				$("#login-btn").addClass("btn-primary");
-				$("#register-btn").removeClass("btn-primary");
-				$("#register-btn").addClass("btn-light");
-	
-			});
-			$("#register-btn").click(function(){
-                $("#login-form").hide()
-                $("#register-form").show()
-				$("#register-btn").removeClass("btn-light");
-				$("#register-btn").addClass("btn-primary");
-				$("#login-btn").removeClass("btn-primary");
-				$("#login-btn").addClass("btn-light");
-	
-			});
-		});
-	</script>
+   $(document).ready(function(){
+		$("#register-form").hide()
+   		$("#login-btn").click(function(){
+        $("#register-form").hide()
+        $("#login-form").show()
+   		$("#login-btn").removeClass("btn-light");
+   		$("#login-btn").addClass("btn-primary");
+   		$("#register-btn").removeClass("btn-primary");
+   		$("#register-btn").addClass("btn-light");
+   
+   	});
+   	$("#register-btn").click(function(){
+        $("#login-form").hide()
+        $("#register-form").show()
+   		$("#register-btn").removeClass("btn-light");
+   		$("#register-btn").addClass("btn-primary");
+   		$("#login-btn").removeClass("btn-primary");
+   		$("#login-btn").addClass("btn-light");
+   
+   	});
+   });
+</script>
 <style>
-.container-fluid{
-	padding: 1%;
-}
+   .container-fluid{
+   padding: 1%;
+   }
 </style>

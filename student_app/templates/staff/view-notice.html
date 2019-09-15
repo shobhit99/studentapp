@@ -1,47 +1,45 @@
 <html>
 <head>
-	{% load static %}
+    {% load static %}
     <title>PICT | Student Management System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-{% include 'student_app/head.html' %}
-<link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
-<link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
-<script src="{% static 'student_app/js/docs.js' %}"></script>
-<link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'student_app/head.html' %}
+    <link href="{% static 'student_app/css/navbar-fixed-left.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'student_app/css/docs.css' %}" rel="stylesheet" />
+    <script src="{% static 'student_app/js/docs.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'student_app/css/style.css' %}">
 </head>
 <body>
-		{% include 'staff/navbar.html' %}
-		<div class="container-fluid">
+    {% include 'staff/navbar.html' %}
+    <div class="container-fluid">
         {% if messages %}
         {% for message in messages %}
         <div class="alert alert-success" role="alert">
             {{ message }}
         </div>
         {% endfor %}
-      {% endif %}
-            <div class="row">
-                    {% for notice in notices %}
-                    <div class="col-md-4 col-sm-6">  
-                <form name="note-delete" method="POST" action="{% url 'notice' action='view' %}">
-                    {% csrf_token %}     
+        {% endif %}
+        <div class="row">
+            {% for notice in notices %}
+            <div class="col-md-4 col-sm-6">
+            <form name="note-delete" method="POST" action="{% url 'notice' action='view' %}">
+                {% csrf_token %}     
                 <div class="card border-dark mb-3">
-                        <div class="card-header">{% for c in notice.class_obj.all %}
-                                <span class="badge badge-dark">{{ c }}</span>
-                               {% endfor %}
-                        </div>
-                        <div class="card-body text-dark">
-                          <h5 class="card-title">{{ notice.title }}</h5>
-                          <p class="card-text">{{ notice.notice }}</p>
-                          <input type="hidden" name="id" value="{{ notice.id }}">
-                          <button class="btn btn-sm btn-outline-dark">Delete</button>
-                        </div>
-                        
-                      </div>
-                 
-                </form>
+                    <div class="card-header">{% for c in notice.class_obj.all %}
+                        <span class="badge badge-dark">{{ c }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="card-body text-dark">
+                        <h5 class="card-title">{{ notice.title }}</h5>
+                        <p class="card-text">{{ notice.notice }}</p>
+                        <input type="hidden" name="id" value="{{ notice.id }}">
+                        <button class="btn btn-sm btn-outline-dark">Delete</button>
+                    </div>
+                </div>
+            </form>
             </div>
-                 {% endfor %}
-            </div>
-		</div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
-</html>
+</html>     
