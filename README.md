@@ -19,7 +19,7 @@ max 70 chars on one line
 >> STAF100[0-4]:password123
 
 ```Librarian```
->>> STAFF1005:password123
+>> STAFF1005:password123
 
 ```Students```
 #### be1
