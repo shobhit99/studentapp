@@ -24,7 +24,7 @@ SECRET_KEY = '&!emvx*17yyay=vk8^gctsjddh0xya!sw2!b6)=+y^zu(hgvk9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['collegemis.herokuapp.com', 'localhost']
 
 
 # Application definition
