@@ -16,18 +16,10 @@ max 70 chars on one line
 
 ### Testing Credentials
 ```Teaching Staff```
->> STAF100[0-4]:password123
+>> STAF1001:password123
 
 ```Librarian```
->> STAFF1005:password123
+>> STAF1005:password123
 
-```Students```
-#### be1
->> C2K1010:password123
->> C2K1011:password123
-#### be2
->> C2K10[8-9]:password123
-### be3
->> C2K10[4-7]:password123
-### be4
->> C2K10[0-3]:password123
+```Student```
+>> C2K1000:password123
